@@ -35,10 +35,17 @@ jobs:
       - name: Check out the code
         uses: actions/checkout@v4
 
-      - name: Run Semgrep
-        uses: semgrep/semgrep-action@v1
+      - name: Set up Python
+        uses: actions/setup-python@v5
         with:
-          config: auto
+          python-version: "3.12"
+
+      - name: Install Semgrep
+        run: pip install semgrep
+
+      - name: Run Semgrep with security gate
+        run: semgrep scan --config auto --severity ERROR --error
+
   trivy:
     runs-on: ubuntu-latest
 
@@ -52,7 +59,8 @@ jobs:
           scan-type: fs
           scan-ref: .
           severity: HIGH,CRITICAL
-          exit-code: 0
+          exit-code: 1
+
   docker-scan:
     runs-on: ubuntu-latest
 
@@ -69,4 +77,4 @@ jobs:
           scan-type: image
           image-ref: devsecops-demo:${{ github.sha }}
           severity: HIGH,CRITICAL
-          exit-code: 0
+          exit-code: 1
