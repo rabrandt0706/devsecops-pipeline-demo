@@ -1,4 +1,4 @@
-from flask import Flask, jsonify  # type: ignore[import-not-found]
+from flask import Flask, jsonify
 
 app = Flask(__name__)
 

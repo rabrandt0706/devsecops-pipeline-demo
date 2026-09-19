@@ -53,3 +53,20 @@ jobs:
           scan-ref: .
           severity: HIGH,CRITICAL
           exit-code: 0
+  docker-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Build the Docker image
+        run: docker build -t devsecops-demo:${{ github.sha }} .
+
+      - name: Scan the image with Trivy
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: image
+          image-ref: devsecops-demo:${{ github.sha }}
+          severity: HIGH,CRITICAL
+          exit-code: 0
